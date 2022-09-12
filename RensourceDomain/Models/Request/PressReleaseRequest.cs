@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,7 +13,8 @@ namespace RensourceDomain.Models.Request
         [Required(ErrorMessage = "Title is Required")]
         public string? Title { get; set; }
         public string? Content { get; set; }
-        public string? Image { get; set; }
+        [Required(ErrorMessage = "Image is Required")]
+        public IFormFile? Image { get; set; }
         public string? VideoLink { get; set; }
         public List<string>? Tags { get; set; }
     }

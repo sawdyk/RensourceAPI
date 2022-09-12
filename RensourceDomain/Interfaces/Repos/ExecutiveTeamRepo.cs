@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RensourceDomain.Configurations;
+using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Request;
 using RensourceDomain.Models.Response;
 using RensourcePersistence.AppDBContext;
@@ -17,21 +20,34 @@ namespace RensourceDomain.Interfaces.Repos
     {
         private readonly ILogger<ExecutiveTeamRepo> _logger;
         private readonly ApplicationDBContext _context;
-        public ExecutiveTeamRepo(ILogger<ExecutiveTeamRepo> logger, ApplicationDBContext context)
+        private readonly IFileUploadRepo? _fileUploadRepo;
+        private FoldersConfig? _foldersConfig;
+        public ExecutiveTeamRepo(ILogger<ExecutiveTeamRepo> logger, ApplicationDBContext context, IFileUploadRepo? fileUploadRepo, IOptions<FoldersConfig>? foldersConfig)
         {
             _logger = logger;
             _context = context;
+            _fileUploadRepo = fileUploadRepo;
+            _foldersConfig = foldersConfig.Value;
         }
         public async Task<GenericResponse> CreateExecutiveTeamAsync(ExecutiveTeamRequest execReq)
         {
             try
             {
+                var response = await _fileUploadRepo.UploadImageToDirectoryAsync(execReq?.Image, _foldersConfig.Executives);
+                if (response is null)
+                    return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                if (response != null)
+                {
+                    if (response.StatusCode == HttpStatusCode.BadRequest)
+                        return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                }
+
                 var newExec = new ExecutiveTeam
                 {
                     FirstName = execReq.FirstName,
                     LastName = execReq.LastName,
                     OtherName = execReq.OtherName,
-                    Image = execReq.Image,
+                    Image = response.Data.ToString(),
                     Profile = execReq.OtherName,
                     LinkedIn = execReq.OtherName,
                     Twitter = execReq.OtherName,
@@ -178,10 +194,19 @@ namespace RensourceDomain.Interfaces.Repos
                 var exec = await _context.ExecutiveTeam.FirstOrDefaultAsync(x => x.Id == execReq.Id);
                 if (exec != null)
                 {
+                    var response = await _fileUploadRepo.UploadImageToDirectoryAsync(execReq?.Image, _foldersConfig.Executives);
+                    if (response is null)
+                        return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    if (response != null)
+                    {
+                        if (response.StatusCode == HttpStatusCode.BadRequest)
+                            return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    }
+
                     exec.FirstName = execReq.FirstName;
                     exec.LastName = execReq.LastName;
                     exec.OtherName = execReq.OtherName;
-                    exec.Image = execReq.Image;
+                    exec.Image = response.Data.ToString();
                     exec.Profile = execReq.OtherName;
                     exec.LinkedIn = execReq.OtherName;
                     exec.Twitter = execReq.OtherName;

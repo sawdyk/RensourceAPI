@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RensourceDomain.Configurations;
 using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Request;
 using RensourceDomain.Models.Response;
@@ -19,11 +21,13 @@ namespace RensourceDomain.Interfaces.Repos
         private readonly ILogger<ProjectsRepo> _logger;
         private readonly ApplicationDBContext _context;
         private readonly IFileUploadRepo? _fileUploadRepo;
-        public ProjectsRepo(ILogger<ProjectsRepo> logger, ApplicationDBContext context, IFileUploadRepo? fileUploadRepo)
+        private FoldersConfig? _foldersConfig;
+        public ProjectsRepo(ILogger<ProjectsRepo> logger, ApplicationDBContext context, IFileUploadRepo? fileUploadRepo, IOptions<FoldersConfig>? foldersConfig)
         {
             _logger = logger;
             _context = context;
             _fileUploadRepo = fileUploadRepo;
+            _foldersConfig = foldersConfig.Value;
         }
         public async Task<GenericResponse> CreateProjectAsync(ProjectRequest? projReq)
         {
@@ -32,7 +36,7 @@ namespace RensourceDomain.Interfaces.Repos
                 var proj = _context.Projects.FirstOrDefault(x => x.Title == projReq.Title);
                 if (proj is null)
                 {
-                    var response = await _fileUploadRepo.UploadImageToDirectoryAsync(projReq?.Image, "Projects");
+                    var response = await _fileUploadRepo.UploadImageToDirectoryAsync(projReq?.Image, _foldersConfig.Projects);
                     if (response is null)
                         return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
                     if (response != null)

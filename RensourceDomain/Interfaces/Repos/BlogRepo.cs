@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RensourceDomain.Configurations;
+using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Request;
 using RensourceDomain.Models.Response;
 using RensourcePersistence.AppDBContext;
@@ -17,10 +20,14 @@ namespace RensourceDomain.Interfaces.Repos
     {
         private readonly ILogger<BlogRepo> _logger;
         private readonly ApplicationDBContext _context;
-        public BlogRepo(ILogger<BlogRepo> logger, ApplicationDBContext context)
+        private readonly IFileUploadRepo? _fileUploadRepo;
+        private FoldersConfig? _foldersConfig;
+        public BlogRepo(ILogger<BlogRepo> logger, ApplicationDBContext context, IFileUploadRepo? fileUploadRepo, IOptions<FoldersConfig>? foldersConfig)
         {
             _logger = logger;
             _context = context;
+            _fileUploadRepo = fileUploadRepo;
+            _foldersConfig = foldersConfig.Value;
         }
 
         public async Task<GenericResponse> CreateBlogAsync(BlogRequest blogReq)
@@ -30,13 +37,22 @@ namespace RensourceDomain.Interfaces.Repos
                 var blog = _context.Blog.FirstOrDefault(x => x.Title == blogReq.Title);
                 if (blog is null)
                 {
+                    var response = await _fileUploadRepo.UploadImageToDirectoryAsync(blogReq?.Image, _foldersConfig.Blog);
+                    if (response is null)
+                        return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    if (response != null)
+                    {
+                        if (response.StatusCode == HttpStatusCode.BadRequest)
+                            return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    }
+
                     IList<string> tags = blogReq.Tags;
                     string tagList = string.Join(",", tags);
 
                     var newBlog = new Blog
                     {
                         Title = blogReq.Title,
-                        Image = blogReq.Image,
+                        Image = response.Data.ToString(),
                         VideoLink = blogReq.VideoLink,
                         Content = blogReq.Content,
                         Tags = tagList,
@@ -108,11 +124,20 @@ namespace RensourceDomain.Interfaces.Repos
                 var blog = await _context.Blog.FirstOrDefaultAsync(x => x.Id == blogReq.Id);
                 if (blog != null)
                 {
+                    var response = await _fileUploadRepo.UploadImageToDirectoryAsync(blogReq?.Image, _foldersConfig.Blog);
+                    if (response is null)
+                        return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    if (response != null)
+                    {
+                        if (response.StatusCode == HttpStatusCode.BadRequest)
+                            return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    }
+
                     IList<string> tags = blogReq.Tags;
                     string tagList = string.Join(",", tags);
 
                     blog.Title = blogReq.Title;
-                    blog.Image = blogReq.Image;
+                    blog.Image = response.Data.ToString();
                     blog.Content = blogReq.Content;
                     blog.Tags = tagList;
                     blog.VideoLink = blogReq.VideoLink;

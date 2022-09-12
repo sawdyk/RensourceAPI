@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RensourceDomain.Configurations;
+using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Request;
 using RensourceDomain.Models.Response;
 using RensourcePersistence.AppDBContext;
@@ -17,10 +20,14 @@ namespace RensourceDomain.Interfaces.Repos
     {
         private readonly ILogger<PressReleaseRepo> _logger;
         private readonly ApplicationDBContext _context;
-        public PressReleaseRepo(ILogger<PressReleaseRepo> logger, ApplicationDBContext context)
+        private readonly IFileUploadRepo? _fileUploadRepo;
+        private FoldersConfig? _foldersConfig;
+        public PressReleaseRepo(ILogger<PressReleaseRepo> logger, ApplicationDBContext context, IFileUploadRepo? fileUploadRepo, IOptions<FoldersConfig>? foldersConfig)
         {
             _logger = logger;
             _context = context;
+            _fileUploadRepo = fileUploadRepo;
+            _foldersConfig = foldersConfig.Value;
         }
         public async Task<GenericResponse> CreatePressReleaseAsync(PressReleaseRequest pressReq)
         {
@@ -29,13 +36,22 @@ namespace RensourceDomain.Interfaces.Repos
                 var pressRls = _context.PressRelease.FirstOrDefault(x => x.Title == pressReq.Title);
                 if (pressRls is null)
                 {
+                    var response = await _fileUploadRepo.UploadImageToDirectoryAsync(pressReq?.Image, _foldersConfig.PressRelease);
+                    if (response is null)
+                        return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    if (response != null)
+                    {
+                        if (response.StatusCode == HttpStatusCode.BadRequest)
+                            return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    }
+
                     IList<string> tags = pressReq.Tags;
                     string tagList = string.Join(",", tags);
 
                     var newpressRls = new PressRelease
                     {
                         Title = pressReq.Title,
-                        Image = pressReq.Image,
+                        Image = response.Data.ToString(),
                         VideoLink = pressReq.VideoLink,
                         Tags = tagList,
                         Content = pressReq.Content,
@@ -104,11 +120,20 @@ namespace RensourceDomain.Interfaces.Repos
                 var pres = await _context.PressRelease.FirstOrDefaultAsync(x => x.Id == pressReq.Id);
                 if (pres != null)
                 {
+                    var response = await _fileUploadRepo.UploadImageToDirectoryAsync(pressReq?.Image, _foldersConfig.PressRelease);
+                    if (response is null)
+                        return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    if (response != null)
+                    {
+                        if (response.StatusCode == HttpStatusCode.BadRequest)
+                            return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    }
+
                     IList<string> tags = pressReq.Tags;
                     string tagList = string.Join(",", tags);
 
                     pres.Title = pressReq.Title;
-                    pres.Image = pressReq.Image;
+                    pres.Image = response.Data.ToString();
                     pres.Content = pressReq.Content;
                     pres.Tags = tagList;
                     pres.VideoLink = pressReq.VideoLink;

@@ -21,7 +21,7 @@ namespace RensourceAPI.Controllers
         [HttpPost]
         [Route("CreatePressRelease")]
         [SwaggerOperation(Summary = "Create a new Press Release", Description = "This Endpoint Creates a new Press Release")]
-        public async Task<IActionResult> CreatePressReleaseAsync(PressReleaseRequest pressReq)
+        public async Task<IActionResult> CreatePressReleaseAsync([FromForm] PressReleaseRequest pressReq)
         {
             if (!ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace RensourceAPI.Controllers
         [HttpPut]
         [Route("UpdatePressRelease")]
         [SwaggerOperation(Summary = "Update a specific Press Release", Description = "This Endpoint Updates a specifc Press Release")]
-        public async Task<IActionResult> UpdatePressReleaseAsync(UpdatePressReleaseRequest pressReq)
+        public async Task<IActionResult> UpdatePressReleaseAsync([FromForm] UpdatePressReleaseRequest pressReq)
         {
             if (!ModelState.IsValid)
             {

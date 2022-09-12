@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace RensourceDomain.Models.Request
         [Required(ErrorMessage = "Partner Name is Required")]
         public string? PartnerName { get; set; }
         [Required(ErrorMessage = "Image is Required")]
-        public string? Image { get; set; }
+        public IFormFile? Image { get; set; }
     }
 
     public class PartnerRequest : PartnerRequestBase

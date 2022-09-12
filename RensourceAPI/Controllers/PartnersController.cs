@@ -19,7 +19,7 @@ namespace RensourceAPI.Controllers
         [HttpPost]
         [Route("CreatePartner")]
         [SwaggerOperation(Summary = "Create a new Partner", Description = "This Endpoint Creates a new Partner")]
-        public async Task<IActionResult> CreatePartnerAsync(PartnerRequest req)
+        public async Task<IActionResult> CreatePartnerAsync([FromForm] PartnerRequest req)
         {
             if (!ModelState.IsValid)
             {
@@ -64,7 +64,7 @@ namespace RensourceAPI.Controllers
         [HttpPut]
         [Route("UpdatePartner")]
         [SwaggerOperation(Summary = "Update a specific Partner", Description = "This Endpoint Updates a specifc Partner")]
-        public async Task<IActionResult> UpdatePartnerAsync(UpdatePartnerRequest req)
+        public async Task<IActionResult> UpdatePartnerAsync([FromForm] UpdatePartnerRequest req)
         {
             if (!ModelState.IsValid)
             {

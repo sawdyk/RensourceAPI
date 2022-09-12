@@ -41,6 +41,9 @@ builder.Services.AddCors(c =>
 
 //Application settings and configurations
 builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailConfig"));
+builder.Services.Configure<FileUrlConfig>(builder.Configuration.GetSection("FileUrlConfig"));
+builder.Services.Configure<FoldersConfig>(builder.Configuration.GetSection("FoldersConfig"));
+
 
 //Register all service dependencies
 var appSerivces = new AppServicesCollections(builder.Services, builder.Configuration);

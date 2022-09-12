@@ -21,7 +21,7 @@ namespace RensourceAPI.Controllers
         [HttpPost]
         [Route("CreateExecTeam")]
         [SwaggerOperation(Summary = "Create a new Executive Team Member", Description = "This Endpoint Creates a new Executive Team Member")]
-        public async Task<IActionResult> CreateExecutiveTeamAsync(ExecutiveTeamRequest execReq)
+        public async Task<IActionResult> CreateExecutiveTeamAsync([FromForm] ExecutiveTeamRequest execReq)
         {
             if (!ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace RensourceAPI.Controllers
         [HttpPut]
         [Route("UpdateExecTeam")]
         [SwaggerOperation(Summary = "Update a specific Executive Team Member", Description = "This Endpoint Updates a specifc Executive Team Member")]
-        public async Task<IActionResult> UpdateExecutiveTeamAsync(UpdateExecutiveTeamRequest execReq)
+        public async Task<IActionResult> UpdateExecutiveTeamAsync([FromForm] UpdateExecutiveTeamRequest execReq)
         {
             if (!ModelState.IsValid)
             {

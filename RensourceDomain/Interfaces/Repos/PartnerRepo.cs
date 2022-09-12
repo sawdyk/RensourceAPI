@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RensourceDomain.Configurations;
+using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Request;
 using RensourceDomain.Models.Response;
 using RensourcePersistence.AppDBContext;
@@ -17,10 +20,14 @@ namespace RensourceDomain.Interfaces.Repos
     {
         private readonly ILogger<PartnerRepo> _logger;
         private readonly ApplicationDBContext _context;
-        public PartnerRepo(ILogger<PartnerRepo> logger, ApplicationDBContext context)
+        private readonly IFileUploadRepo? _fileUploadRepo;
+        private FoldersConfig? _foldersConfig;
+        public PartnerRepo(ILogger<PartnerRepo> logger, ApplicationDBContext context, IFileUploadRepo? fileUploadRepo, IOptions<FoldersConfig>? foldersConfig)
         {
             _logger = logger;
             _context = context;
+            _fileUploadRepo = fileUploadRepo;
+            _foldersConfig = foldersConfig.Value;
         }
         public async Task<GenericResponse> CreatePartnerAsync(PartnerRequest partnerRequest)
         {
@@ -29,10 +36,19 @@ namespace RensourceDomain.Interfaces.Repos
                 var partner = _context.Partners.FirstOrDefault(x => x.PartnerName == partnerRequest.PartnerName);
                 if (partner is null)
                 {
+                    var response = await _fileUploadRepo.UploadImageToDirectoryAsync(partnerRequest?.Image, _foldersConfig.Partners);
+                    if (response is null)
+                        return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    if (response != null)
+                    {
+                        if (response.StatusCode == HttpStatusCode.BadRequest)
+                            return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    }
+
                     var newPart = new Partners
                     {
                         PartnerName = partnerRequest.PartnerName,
-                        Image = partnerRequest.Image,
+                        Image = response.Data.ToString(),
                         CreatedBy = partnerRequest.CreatedBy,
                         DateCreated = DateTime.Now
                     };
@@ -98,8 +114,17 @@ namespace RensourceDomain.Interfaces.Repos
                 var part = await _context.Partners.FirstOrDefaultAsync(x => x.Id == partnerRequest.Id);
                 if (part != null)
                 {
+                    var response = await _fileUploadRepo.UploadImageToDirectoryAsync(partnerRequest?.Image, _foldersConfig.Partners);
+                    if (response is null)
+                        return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    if (response != null)
+                    {
+                        if (response.StatusCode == HttpStatusCode.BadRequest)
+                            return new GenericResponse { StatusCode = response.StatusCode, StatusMessage = response.StatusMessage };
+                    }
+
                     part.PartnerName = partnerRequest.PartnerName;
-                    part.Image = partnerRequest.Image;
+                    part.Image = response.Data.ToString();
                     part.LastUpdatedDate = DateTime.Now;
                     part.UpdatedBy = partnerRequest.UpdatedBy;
 

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RensourceDomain.Configurations;
 using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Response;
 using RensourcePersistence.AppDBContext;
@@ -15,9 +17,11 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
     public class FileUploadRepo : IFileUploadRepo
     {
         private readonly ILogger<FileUploadRepo> _logger;
-        public FileUploadRepo(ILogger<FileUploadRepo> logger)
+        private FileUrlConfig? _fileUrlConfig;
+        public FileUploadRepo(ILogger<FileUploadRepo> logger, IOptions<FileUrlConfig>? fileUrlConfig)
         {
             _logger = logger;
+            _fileUrlConfig = fileUrlConfig.Value;
         }
 
         public string[] ImageFormats()
@@ -41,8 +45,10 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
                 }
                 else
                 {
+                    
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\" + folder);
                     string fullPathWithFileName = path + "\\" + file.FileName;
+                    string fileUrl = _fileUrlConfig.BaseUrl + "/" + folder + "/" + file.FileName;
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -50,7 +56,7 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
                     using (var stream = new FileStream(fullPathWithFileName, FileMode.Create, FileAccess.ReadWrite))
                     {
                         file?.CopyToAsync(stream);
-                        response = new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = $"Successful", Data = fullPathWithFileName };
+                        response = new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = $"Successful", Data = fileUrl };
                     }
                 }
                 return response;

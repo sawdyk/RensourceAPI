@@ -20,7 +20,7 @@ namespace RensourceAPI.Controllers
         [HttpPost]
         [Route("CreateBlog")]
         [SwaggerOperation(Summary = "Create a new Blog", Description = "This Endpoint Creates a new Blog")]
-        public async Task<IActionResult> CreateBlogAsync(BlogRequest blogReq)
+        public async Task<IActionResult> CreateBlogAsync([FromForm]BlogRequest blogReq)
         {
             if (!ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace RensourceAPI.Controllers
         [HttpPut]
         [Route("UpdateBlog")]
         [SwaggerOperation(Summary = "Update a specific Blog", Description = "This Endpoint Updates a specifc Blog")]
-        public async Task<IActionResult> UpdateBlogAsync(UpdateBlogRequest blogReq)
+        public async Task<IActionResult> UpdateBlogAsync([FromForm] UpdateBlogRequest blogReq)
         {
             if (!ModelState.IsValid)
             {
