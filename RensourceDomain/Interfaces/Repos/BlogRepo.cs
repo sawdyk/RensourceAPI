@@ -76,25 +76,25 @@ namespace RensourceDomain.Interfaces.Repos
             }
         }
 
-        public async Task<GenericResponse> GetAllBlogAsync(int pageNumber, int pageSize)
+        public async Task<PaginationResponse> GetAllBlogAsync(int pageNumber, int pageSize)
         {
             try
             {
                 var allBlogs = (from pr in _context.Blog
                                orderby pr.Id descending
                                select pr).Skip((pageNumber - 1) * pageSize).Take(pageSize);
-
+                var blogsCount = (from pr in _context.Blog select pr).Count();
                 if (allBlogs.Count() > 0)
                 {
-                    return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allBlogs };
+                    return new PaginationResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allBlogs , TotalData = blogsCount };
                 }
 
-                return new GenericResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
+                return new PaginationResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Mesage: {ex.Message}; StackTrace: {ex.StackTrace}; DateTime: {DateTime.Now}");
-                return new GenericResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
+                return new PaginationResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
             }
         }
 

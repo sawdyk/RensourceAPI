@@ -74,22 +74,24 @@ namespace RensourceDomain.Interfaces.Repos
             }
         }
 
-        public async Task<GenericResponse> GetAllProjectsAsync(int pageNumber, int pageSize)
+        public async Task<PaginationResponse> GetAllProjectsAsync(int pageNumber, int pageSize)
         {
             try
             {
-                var allProjects = (from pr in _context.Projects orderby pr.Id descending select pr).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                var allProjects = (from pr in _context.Projects orderby pr.Id descending select pr)
+                    .Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                var projectsCount = (from pr in _context.Projects select pr).Count();
                 if (allProjects.Count() > 0)
                 {
-                    return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allProjects };
+                    return new PaginationResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allProjects, TotalData = projectsCount };
                 }
 
-                return new GenericResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
+                return new PaginationResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Mesage: {ex.Message}; StackTrace: {ex.StackTrace}; DateTime: {DateTime.Now}");
-                return new GenericResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
+                return new PaginationResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
             }
         }
 

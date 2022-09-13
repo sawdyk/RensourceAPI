@@ -13,4 +13,9 @@ namespace RensourceDomain.Models.Response
         public string? StatusMessage { get; set; }
         public object? Data { get; set; }
     }
+
+    public class PaginationResponse : GenericResponse
+    {
+        public long TotalData { get; set; }
+    }
 }

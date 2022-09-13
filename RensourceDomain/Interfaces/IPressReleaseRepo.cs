@@ -12,7 +12,7 @@ namespace RensourceDomain.Interfaces
     {
         Task<GenericResponse> CreatePressReleaseAsync(PressReleaseRequest pressReq);
         Task<GenericResponse> UpdatePressReleaseAsync(UpdatePressReleaseRequest pressReq);
-        Task<GenericResponse> GetAllPressReleaseAsync(int pageNumber, int pageSize);
+        Task<PaginationResponse> GetAllPressReleaseAsync(int pageNumber, int pageSize);
         Task<GenericResponse> GetPressReleaseAsync(Guid Id);
         Task<GenericResponse> DeletePressReleaseAsync(Guid Id);
     }

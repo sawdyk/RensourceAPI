@@ -12,7 +12,7 @@ namespace RensourceDomain.Interfaces
     {
         Task<GenericResponse> CreateProjectAsync(ProjectRequest projReq);
         Task<GenericResponse> UpdateProjectAsync(UpdateProjectRequest projReq);
-        Task<GenericResponse> GetAllProjectsAsync(int pageNumber, int pageSize);
+        Task<PaginationResponse> GetAllProjectsAsync(int pageNumber, int pageSize);
         Task<GenericResponse> GetProjectAsync(Guid Id);
         Task<GenericResponse> DeleteProjectAsync(Guid Id);
     }

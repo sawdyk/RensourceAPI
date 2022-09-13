@@ -75,22 +75,24 @@ namespace RensourceDomain.Interfaces.Repos
             }
         }
 
-        public async Task<GenericResponse> GetAllPressReleaseAsync(int pageNumber, int pageSize)
+        public async Task<PaginationResponse> GetAllPressReleaseAsync(int pageNumber, int pageSize)
         {
             try
             {
-                var allPresRls = (from pr in _context.PressRelease orderby pr.Id descending select pr).Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                var allPresRls = (from pr in _context.PressRelease orderby pr.Id descending select pr)
+                    .Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                var pressReleaseCount = (from pr in _context.PressRelease select pr).Count();
                 if (allPresRls.Count() > 0)
                 {
-                    return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allPresRls };
+                    return new PaginationResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allPresRls, TotalData = pressReleaseCount };
                 }
 
-                return new GenericResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
+                return new PaginationResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Mesage: {ex.Message}; StackTrace: {ex.StackTrace}; DateTime: {DateTime.Now}");
-                return new GenericResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
+                return new PaginationResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
             }
         }
 

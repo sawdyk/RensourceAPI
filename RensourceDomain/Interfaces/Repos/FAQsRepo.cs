@@ -4,12 +4,7 @@ using RensourceDomain.Models.Request;
 using RensourceDomain.Models.Response;
 using RensourcePersistence.AppDBContext;
 using RensourcePersistence.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RensourceDomain.Interfaces.Repos
 {
@@ -26,25 +21,19 @@ namespace RensourceDomain.Interfaces.Repos
         {
             try
             {
-                var faq = _context.FAQs.FirstOrDefault(x => x.Question == fAQReq.Question);
-                if (faq is null)
+                var newFaq = new FAQs
                 {
-                    var newFaq = new FAQs
-                    {
-                        Question = fAQReq.Question,
-                        Answer = fAQReq.Answer,
-                        CreatedBy = fAQReq.CreatedBy,
-                        DateCreated = DateTime.Now
-                    };
+                    Question = fAQReq.Question,
+                    Answer = fAQReq.Answer,
+                    CreatedBy = fAQReq.CreatedBy,
+                    DateCreated = DateTime.Now
+                };
 
-                    await _context.FAQs.AddAsync(newFaq);
-                    await _context.SaveChangesAsync();
+                await _context.FAQs.AddAsync(newFaq);
+                await _context.SaveChangesAsync();
 
-                    _logger.LogInformation($"FAQ Created Successfully");
-                    return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "FAQ Created Successfully", Data = newFaq };
-                }
-
-                return new GenericResponse { StatusCode = HttpStatusCode.BadRequest, StatusMessage = $"FAQ with Question {fAQReq.Question} exists" };
+                _logger.LogInformation($"FAQ Created Successfully");
+                return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "FAQ Created Successfully", Data = newFaq };
             }
             catch (Exception ex)
             {

@@ -12,7 +12,7 @@ namespace RensourceDomain.Interfaces
     {
         Task<GenericResponse> CreateBlogAsync(BlogRequest blogReq);
         Task<GenericResponse> UpdateBlogAsync(UpdateBlogRequest blogReq);
-        Task<GenericResponse> GetAllBlogAsync(int pageNumber, int pageSize);
+        Task<PaginationResponse> GetAllBlogAsync(int pageNumber, int pageSize);
         Task<GenericResponse> GetBlogAsync(Guid Id);
         Task<GenericResponse> DeleteBlogAsync(Guid Id);
     }

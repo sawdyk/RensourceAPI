@@ -42,7 +42,7 @@ namespace RensourceAPI.Controllers
             {
                 return BadRequest();
             }
-
+            
             var result = await _projectsRepo.GetAllProjectsAsync(pageNumber, pageSize);
 
             return Ok(result);
