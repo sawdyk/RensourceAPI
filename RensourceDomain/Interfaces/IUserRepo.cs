@@ -11,7 +11,7 @@ namespace RensourceDomain.Interfaces
     public interface IUserRepo
     {
         Task<GenericResponse> UserLoginAsync(UserLoginRequest loginReq);
-        Task<GenericResponse> ForgotPasswordAsync();
-        Task<GenericResponse> ChangePasswordAsync();
+        Task<GenericResponse> ForgotPasswordAsync(PasswordResetRequest request);
+        Task<GenericResponse> ChangePasswordAsync(ChangePasswordRequest request);
     }
 }

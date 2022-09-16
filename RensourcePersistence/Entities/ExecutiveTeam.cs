@@ -31,9 +31,9 @@ namespace RensourcePersistence.Entities
         public DateTime DateDeleted { get; set; }
 
         [ForeignKey("ExecutiveTeamCategoryId")]
-        public virtual ExecutiveTeamCategory? ExecutiveTeamCategory { get; set; }
+        public virtual ExecutiveTeamCategory ExecutiveTeamCategory { get; set; }
 
         [ForeignKey("ExecutiveRoleId")]
-        public virtual ExecutiveRoles? ExecutiveRoles { get; set; }
+        public virtual ExecutiveRoles ExecutiveRoles { get; set; }
     }
 }

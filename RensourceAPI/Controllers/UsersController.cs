@@ -33,5 +33,35 @@ namespace RensourceAPI.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost]
+        [Route("ForgotPassword")]
+        [SwaggerOperation(Summary = "User Forgot Password", Description = "This is an Endpoint for forgot password reset")]
+        public async Task<IActionResult> ForgotPasswordAsync(PasswordResetRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _usersRepo.ForgotPasswordAsync(request);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("ChangePassword")]
+        [SwaggerOperation(Summary = "User Change Password", Description = "This is an Endpoint for Changing users Password")]
+        public async Task<IActionResult> ChangePasswordAsync(ChangePasswordRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _usersRepo.ChangePasswordAsync(request);
+
+            return Ok(result);
+        }
     }
 }

@@ -56,7 +56,7 @@ namespace RensourceDomain.Interfaces.Repos
                         Tags = tagList,
                         Content = pressReq.Content,
                         CreatedBy = pressReq.CreatedBy,
-                        DateCreated = DateTime.Now
+                        DateCreated = pressReq.DateCreated,
                     };
 
                     await _context.PressRelease.AddAsync(newpressRls);
@@ -79,7 +79,7 @@ namespace RensourceDomain.Interfaces.Repos
         {
             try
             {
-                var allPresRls = (from pr in _context.PressRelease orderby pr.Id descending select pr)
+                var allPresRls = (from pr in _context.PressRelease orderby pr.DateCreated descending select pr)
                     .Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 var pressReleaseCount = (from pr in _context.PressRelease select pr).Count();
                 if (allPresRls.Count() > 0)
@@ -141,6 +141,7 @@ namespace RensourceDomain.Interfaces.Repos
                     pres.VideoLink = pressReq.VideoLink;
                     pres.LastUpdatedDate = DateTime.Now;
                     pres.UpdatedBy = pressReq.UpdatedBy;
+                    pres.DateCreated = pressReq.DateCreated;
 
                     int projRp = await _context.SaveChangesAsync();
 

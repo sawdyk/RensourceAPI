@@ -104,9 +104,19 @@ namespace RensourceDomain.Interfaces.Repos
             try
             {
                 var allExecs = (from pr in _context.ExecutiveTeam select pr)
-                    .Include(x => x.ExecutiveRoles).AsNoTracking()
-                    .Include(x => x.ExecutiveTeamCategory).AsNoTracking()
+                    .Include(x => x.ExecutiveRoles)
+                    .Include(x => x.ExecutiveTeamCategory)
                     .ToList();
+
+                //var allExecs = (from pr in _context.ExecutiveTeam
+                //               select new
+                //               {
+                //                   ExecutiveTeam = pr,
+                //                   ExecutiveRole = pr.ExecutiveRoles,
+                //                   ExecutiveTeamCategory = pr.ExecutiveTeamCategory,
+                //               }).ToList();
+                  
+                 
                 if (allExecs.Count() > 0)
                 {
                     return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allExecs };

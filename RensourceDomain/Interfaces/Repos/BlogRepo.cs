@@ -57,7 +57,7 @@ namespace RensourceDomain.Interfaces.Repos
                         Content = blogReq.Content,
                         Tags = tagList,
                         CreatedBy = blogReq.CreatedBy,
-                        DateCreated = DateTime.Now
+                        DateCreated = blogReq.DateCreated
                     };
 
                     await _context.Blog.AddAsync(newBlog);
@@ -81,7 +81,7 @@ namespace RensourceDomain.Interfaces.Repos
             try
             {
                 var allBlogs = (from pr in _context.Blog
-                               orderby pr.Id descending
+                               orderby pr.DateCreated descending
                                select pr).Skip((pageNumber - 1) * pageSize).Take(pageSize);
                 var blogsCount = (from pr in _context.Blog select pr).Count();
                 if (allBlogs.Count() > 0)
@@ -143,6 +143,7 @@ namespace RensourceDomain.Interfaces.Repos
                     blog.VideoLink = blogReq.VideoLink;
                     blog.LastUpdatedDate = DateTime.Now;
                     blog.UpdatedBy = blogReq.UpdatedBy;
+                    blog.DateCreated = blogReq.DateCreated;
 
                     int projRp = await _context.SaveChangesAsync();
 

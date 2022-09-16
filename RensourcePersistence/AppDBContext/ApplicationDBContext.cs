@@ -33,11 +33,17 @@ namespace RensourcePersistence.AppDBContext
         public virtual DbSet<Blog>? Blog { get; set; }
         public virtual DbSet<FAQs>? FAQs { get; set; }
         public virtual DbSet<Partners>? Partners { get; set; }
+        public virtual DbSet<ForgotPasswordCodes>? ForgotPasswordCodes { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            //builder.Entity<ExecutiveTeamCategory>()
+            //    .HasOptional(a => a.UserDetail)
+            //    .WithOptionalDependent()
+            //    .WillCascadeOnDelete(true);
+
             base.OnModelCreating(builder);
 
             builder.SeedRoles();

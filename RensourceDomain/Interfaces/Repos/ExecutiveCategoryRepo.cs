@@ -83,9 +83,34 @@ namespace RensourceDomain.Interfaces.Repos
         {
             try
             {
-                var allExecs = (from pr in _context.ExecutiveTeamCategory orderby pr.ExecutiveTeamCategoryName ascending select pr)
-                    .Include(x => x.ExecutiveTeams).AsNoTracking()
-                    .ToList();
+                var allExecs = (from pr in _context.ExecutiveTeamCategory
+                               orderby pr.ExecutiveTeamCategoryName ascending
+                               select
+                               new
+                               {
+                                   ExecutiveTeamCategory = pr,
+                                   ExecutiveTeams = pr.ExecutiveTeams.Select(x => 
+                                   new ExecutiveTeam
+                                   { 
+                                       Id = x.Id,
+                                       FirstName = x.FirstName,
+                                       LastName = x.LastName,
+                                       OtherName = x.OtherName,
+                                       Image = x.Image,
+                                       ExecutiveRoleId = x.ExecutiveRoleId,
+                                       ExecutiveTeamCategoryId = x.ExecutiveTeamCategoryId,
+                                       Profile = x.Profile,
+                                       LinkedIn = x.LinkedIn,
+                                       Twitter = x.LinkedIn,
+                                       IsDeleted = x.IsDeleted,
+                                       CreatedBy = x.CreatedBy,
+                                       DateCreated = x.DateCreated,
+                                       LastUpdatedDate = x.LastUpdatedDate,
+                                       DeletedBy = x.DeletedBy,
+                                       DateDeleted = x.DateDeleted,
+                                       ExecutiveRoles = x.ExecutiveRoles
+                                   }).ToList(),
+                               }).AsNoTracking().ToList();
                 if (allExecs.Count() > 0)
                 {
                     return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allExecs };

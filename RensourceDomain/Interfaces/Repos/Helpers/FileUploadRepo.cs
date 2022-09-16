@@ -26,7 +26,7 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
 
         public string[] ImageFormats()
         {
-            return new string[] { ".jpeg", ".png", ".gif", ".tiff", ".psd", ".jpg" };
+            return new string[] { ".jpeg", ".png", ".gif", ".tiff", ".psd", ".jpg",".svg" };
         }
         public async Task<GenericResponse> UploadImageToDirectoryAsync(IFormFile file, string folder)
         {
@@ -47,6 +47,8 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
                 {
                     
                     string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\" + folder);
+                    _logger.LogInformation($"UploadImageToDirectoryAsync:=> Upload Path => {path}");
+
                     string fullPathWithFileName = path + "\\" + file.FileName;
                     string fileUrl = _fileUrlConfig.BaseUrl + "/" + folder + "/" + file.FileName;
                     if (!Directory.Exists(path))

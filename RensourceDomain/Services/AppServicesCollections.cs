@@ -44,6 +44,7 @@ namespace RensourceDomain.Services
             _service.AddScoped<IBlogRepo, BlogRepo>();
             _service.AddScoped<IPartnerRepo, PartnerRepo>();
             _service.AddScoped<IFileUploadRepo, FileUploadRepo>();
+            _service.AddScoped<IEmailClientRepo, EmailClientRepo>();
             // _service.AddScoped<IBaseRepo, BaseRepo>();
         }
 

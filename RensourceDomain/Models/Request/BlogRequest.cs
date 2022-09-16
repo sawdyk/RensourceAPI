@@ -17,6 +17,7 @@ namespace RensourceDomain.Models.Request
         public IFormFile? Image { get; set; }
         public string? VideoLink { get; set; }
         public List<string>? Tags { get; set; }
+        public DateTime DateCreated { get; set; }
     }
 
     public class BlogRequest : BlogRequestBase
