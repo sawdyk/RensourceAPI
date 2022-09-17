@@ -8,10 +8,6 @@ services:
     ports:
       - '8080:80'
       - '44392:443'
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_HTTPS_PORT=44392
     volumes:
       - '/root/RensourceUploads/Blog:/app/Uploads/Blog'
       - '/root/RensourceUploads/Executives:/app/Uploads/Executives'
