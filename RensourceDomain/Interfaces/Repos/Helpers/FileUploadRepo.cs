@@ -51,7 +51,7 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
                     _logger.LogInformation($"UploadImageToDirectoryAsync:=> Upload Path => {path}");
 
                     string fullPathWithFileName = path + "/" + file.FileName;
-                    string fileUrl = $"{_fileUrlConfig.BaseUrl}{_fileUrlConfig.MainFolder}{folder}{file.FileName}";
+                    string fileUrl = $"{_fileUrlConfig.BaseUrl}{_fileUrlConfig.MainFolder}{folder}/{file.FileName}";
                     _logger.LogInformation($"UploadImageToDirectoryAsync:=> fileUrl => [{fileUrl}]");
                     if (!Directory.Exists(path))
                     {
@@ -60,7 +60,7 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
                     using (var stream = new FileStream(fullPathWithFileName, FileMode.Create, FileAccess.ReadWrite))
                     {
                         file?.CopyToAsync(stream);
-                        response = new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = $"Successful", Data = fileUrl };
+                        response = new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = $"Successful", Data = path };
                     }
                 }
                 return response;
