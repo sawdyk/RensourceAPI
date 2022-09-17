@@ -46,11 +46,13 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
                 else
                 {
                     
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\" + folder);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads/" + folder);
+                    //string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\" + folder);
                     _logger.LogInformation($"UploadImageToDirectoryAsync:=> Upload Path => {path}");
 
-                    string fullPathWithFileName = path + "\\" + file.FileName;
-                    string fileUrl = _fileUrlConfig.BaseUrl + "/" + folder + "/" + file.FileName;
+                    string fullPathWithFileName = path + "/" + file.FileName;
+                    string fileUrl = $"{_fileUrlConfig.BaseUrl}{_fileUrlConfig.MainFolder}{folder}{file.FileName}";
+                    _logger.LogInformation($"UploadImageToDirectoryAsync:=> fileUrl => [{fileUrl}]");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);

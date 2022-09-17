@@ -9,5 +9,6 @@ namespace RensourceDomain.Configurations
     public class FileUrlConfig
     {
         public string? BaseUrl { get; set; }
+        public string? MainFolder { get; set; }
     }
 }

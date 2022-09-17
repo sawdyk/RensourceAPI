@@ -114,15 +114,15 @@ namespace RensourceDomain.Interfaces.Repos
                     {
                         Directory.CreateDirectory(path);
                     } 
-                    var filePath = path + "\\ForgotPassword.html";
-                    var rensource = path + "\\icon.jpg";
-                    var mailIcon = path + "\\icon.jpg";  
+                    var filePath = path + "/ForgotPassword.html";
+                    //var rensource = path + "/icon.jpg";
+                    //var mailIcon = path + "/icon.jpg";  
 
-                    byte[] rensourceBytes = File.ReadAllBytes(rensource);
-                    byte[] mailIconBytes = File.ReadAllBytes(mailIcon);
+                    //byte[] rensourceBytes = File.ReadAllBytes(rensource);
+                    //byte[] mailIconBytes = File.ReadAllBytes(mailIcon);
 
-                    string base64Rensource = Convert.ToBase64String(rensourceBytes);
-                    string base64MailIcon = Convert.ToBase64String(mailIconBytes);
+                    //string base64Rensource = Convert.ToBase64String(rensourceBytes);
+                    //string base64MailIcon = Convert.ToBase64String(mailIconBytes);
 
                     string MailContent = File.ReadAllText(filePath);
                     MailContent = MailContent.Replace("{Name}", user.FirstName);
