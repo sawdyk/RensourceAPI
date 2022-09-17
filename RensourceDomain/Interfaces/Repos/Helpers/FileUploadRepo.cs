@@ -46,7 +46,7 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
                 else
                 {
                     
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads/" + folder);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + folder);
                     //string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\" + folder);
                     _logger.LogInformation($"UploadImageToDirectoryAsync:=> Upload Path => {path}");
 

@@ -109,7 +109,7 @@ namespace RensourceDomain.Interfaces.Repos
                     await _context.SaveChangesAsync();
 
                     //send Mail to user 
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "EmailTemplates");
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/EmailTemplates");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);

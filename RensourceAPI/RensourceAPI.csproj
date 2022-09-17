@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\ForgotPassword.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
@@ -37,7 +41,6 @@
     <Folder Include="Logs\" />
     <Folder Include="Uploads\Executives\" />
     <Folder Include="Uploads\Projects\" />
-    <Folder Include="wwwroot\" />
     <Folder Include="Uploads\Blog\" />
     <Folder Include="Uploads\PressRelease\" />
     <Folder Include="Uploads\Partners\" />
