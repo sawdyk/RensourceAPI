@@ -60,7 +60,7 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
                     using (var stream = new FileStream(fullPathWithFileName, FileMode.Create, FileAccess.ReadWrite))
                     {
                         file?.CopyToAsync(stream);
-                        response = new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = $"Successful", Data = path };
+                        response = new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = $"Successful", Data = fileUrl };
                     }
                 }
                 return response;

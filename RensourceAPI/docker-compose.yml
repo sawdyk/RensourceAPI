@@ -8,9 +8,12 @@ services:
     ports:
       - '8080:80'
     volumes:
-      - '/root/RensourceUploads/Blog:/app/wwwroot/Blog'
-      - '/root/RensourceUploads/Executives:/app/wwwroot/Executives'
-      - '/root/RensourceUploads/Partners:/app/wwwroot/Partners'
-      - '/root/RensourceUploads/PressRelease:/app/wwwroot/PressRelease'
-      - '/root/RensourceUploads/Projects:/app/wwwroot/Projects'
+      - '/home/ubuntu/RensourceUploads/Blog:/app/wwwroot/Blog'
+      - '/home/ubuntu/RensourceUploads/Executives:/app/wwwroot/Executives'
+      - '/home/ubuntu/RensourceUploads/Partners:/app/wwwroot/Partners'
+      - '/home/ubuntu/RensourceUploads/PressRelease:/app/wwwroot/PressRelease'
+      - '/home/ubuntu/RensourceUploads/Projects:/app/wwwroot/Projects'
+      - '/home/ubuntu/RensourceAPILogs:/app/Logs'
      
+
+
