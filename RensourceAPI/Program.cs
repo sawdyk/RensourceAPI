@@ -44,12 +44,15 @@ builder.Services.Configure<EmailConfig>(builder.Configuration.GetSection("EmailC
 builder.Services.Configure<FileUrlConfig>(builder.Configuration.GetSection("FileUrlConfig"));
 builder.Services.Configure<FoldersConfig>(builder.Configuration.GetSection("FoldersConfig"));
 
+//builder.Services.AddHttpsRedirection(options =>
+//{
+//    options.HttpsPort = 443;
+//});
 
 //Register all service dependencies
 var appSerivces = new AppServicesCollections(builder.Services, builder.Configuration);
 appSerivces.AppServiceDependencies();
 appSerivces.AppDatabaseServiceDependencies();
-
 
 //Register all configuration and Application Settings
 
@@ -61,13 +64,16 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+//else
+//{
+//    app.UseHsts();
+//}
 app.UseCors(builder => builder
           .AllowAnyOrigin()
           .AllowAnyMethod()
           .AllowAnyHeader());
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

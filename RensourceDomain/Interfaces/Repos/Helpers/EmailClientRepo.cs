@@ -66,6 +66,7 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
 
                     _logger.LogInformation($"SMTP Config:=> [Host => {client.Host}]--[Port => {client.Port}]");
                     _logger.LogInformation($"[Username => {_emailConfig.UserName}]--[Password => {_emailConfig.Password}] DateTime: {DateTime.Now}");
+                    client.Dispose();
                 }
             }
             catch (Exception ex)
