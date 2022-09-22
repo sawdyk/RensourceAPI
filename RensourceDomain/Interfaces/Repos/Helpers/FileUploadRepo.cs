@@ -46,20 +46,26 @@ namespace RensourceDomain.Interfaces.Repos.Helpers
                 else
                 {
                     
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + folder);
+                    //string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + folder);
                     //string path = Path.Combine(Directory.GetCurrentDirectory(), "Uploads\\" + folder);
-                    _logger.LogInformation($"UploadImageToDirectoryAsync:=> Upload Path => {path}");
+                    //_logger.LogInformation($"UploadImageToDirectoryAsync:=> Upload Path => {path}");
 
-                    string fullPathWithFileName = path + "/" + file.FileName;
-                    string fileUrl = $"{_fileUrlConfig.BaseUrl}{_fileUrlConfig.MainFolder}{folder}/{file.FileName}";
-                    _logger.LogInformation($"UploadImageToDirectoryAsync:=> fileUrl => [{fileUrl}]");
+                    //string fullPathWithFileName = path + "/" + file.FileName;
+                    //string fileUrl = $"{_fileUrlConfig.BaseUrl}{_fileUrlConfig.MainFolder}{folder}/{file.FileName}";
+                    //_logger.LogInformation($"UploadImageToDirectoryAsync:=> fileUrl => [{fileUrl}]");
+
+                    string ImageName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/{folder}");
+                    string fullPathWithFileName = path + "/" + ImageName;
+                    string fileUrl = $"{_fileUrlConfig.BaseUrl}{_fileUrlConfig.MainFolder}{folder}/{ImageName}";
+
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
                     }
-                    using (var stream = new FileStream(fullPathWithFileName, FileMode.Create, FileAccess.ReadWrite))
+                    using (var stream = new FileStream(fullPathWithFileName, FileMode.Create))
                     {
-                        file?.CopyToAsync(stream);
+                        file?.CopyTo(stream);
                         response = new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = $"Successful", Data = fileUrl };
                     }
                 }
