@@ -39,12 +39,7 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
-    <Folder Include="Uploads\Executives\" />
-    <Folder Include="Uploads\Projects\" />
-    <Folder Include="Uploads\Blog\" />
-    <Folder Include="Uploads\PressRelease\" />
-    <Folder Include="Uploads\Partners\" />
-    <Folder Include="Uploads\Partners\" />
+    <Folder Include="https\" />
   </ItemGroup>
 
 </Project>

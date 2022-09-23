@@ -64,16 +64,17 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-//else
-//{
-//    app.UseHsts();
-//}
+if(app.Environment.IsProduction())
+{
+    app.UseHsts();
+}
+
 app.UseCors(builder => builder
           .AllowAnyOrigin()
           .AllowAnyMethod()
           .AllowAnyHeader());
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
