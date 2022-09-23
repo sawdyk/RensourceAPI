@@ -1,5 +1,6 @@
 ﻿using MimeKit;
 using RensourceDomain.Helpers.EmailClient;
+using RensourceDomain.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace RensourceDomain.Interfaces.Helpers
     {
         void SendEmailAsync(EmailMessage message);
         MailMessage CreateEmailMessage(EmailMessage message);
+        void SendContactUsEmailAsync(ContactUsRequest message, string? content);
+        MailMessage ContactUSMail(ContactUsRequest message, string? content);
         Task SendAsync(MailMessage mailMessage);
     }
 }

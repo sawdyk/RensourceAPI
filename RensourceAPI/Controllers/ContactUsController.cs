@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RensourceDomain.Helpers.EmailClient;
 using RensourceDomain.Interfaces;
+using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Request;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -12,10 +14,12 @@ namespace RensourceAPI.Controllers
     public class ContactUsController : ControllerBase
     {
         private readonly IContactUsRepo _contactUsRepo;
+        private readonly IEmailClientRepo _emailClientRepo;
 
-        public ContactUsController(IContactUsRepo contactUsRepo)
+        public ContactUsController(IContactUsRepo contactUsRepo, IEmailClientRepo emailClientRepo)
         {
             _contactUsRepo = contactUsRepo;
+            _emailClientRepo = emailClientRepo;
         }
 
         [HttpPost]
@@ -76,6 +80,21 @@ namespace RensourceAPI.Controllers
             var result = await _contactUsRepo.DeleteMessageAsync(Id);
 
             return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("SendMail")]
+        [SwaggerOperation(Summary = "Send an Email", Description = "Send an Email")]
+        public async Task<IActionResult> SendMail(EmailMessage obj)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+           _emailClientRepo.SendEmailAsync(obj);
+
+            return Ok();
         }
     }
 }

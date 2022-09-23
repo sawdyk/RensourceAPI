@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RensourceDomain.Configurations;
+using RensourceDomain.Helpers.Enums;
 using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Request;
 using RensourceDomain.Models.Response;
@@ -96,11 +97,56 @@ namespace RensourceDomain.Interfaces.Repos
             }
         }
 
+        public async Task<PaginationResponse> GetAllPressReleaseByOrderingAsync(int pageNumber, int pageSize, OrderFilter order)
+        {
+            try
+            {
+                var allPresRls = from pr in _context.PressRelease select pr;
+                if(order == OrderFilter.Ascending)
+                    allPresRls = (from pr in allPresRls orderby pr.DateCreated ascending select pr)
+                    .Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                if (order == OrderFilter.Descending)
+                    allPresRls = (from pr in allPresRls orderby pr.DateCreated descending select pr)
+                    .Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                var pressReleaseCount = (from pr in _context.PressRelease select pr).Count();
+                if (allPresRls.Count() > 0)
+                {
+                    return new PaginationResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allPresRls, TotalData = pressReleaseCount };
+                }
+
+                return new PaginationResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Mesage: {ex.Message}; StackTrace: {ex.StackTrace}; DateTime: {DateTime.Now}");
+                return new PaginationResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
+            }
+        }
+
         public async Task<GenericResponse> GetPressReleaseAsync(Guid Id)
         {
             try
             {
                 var pressRls = (from pr in _context.PressRelease where pr.Id == Id select pr).FirstOrDefault();
+                if (pressRls != null)
+                {
+                    return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = pressRls };
+                }
+
+                return new GenericResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Mesage: {ex.Message}; StackTrace: {ex.StackTrace}; DateTime: {DateTime.Now}");
+                return new GenericResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
+            }
+        }
+
+        public async Task<GenericResponse> GetPressReleaseByTitleAsync(string? title)
+        {
+            try
+            {
+                var pressRls = (from pr in _context.PressRelease where pr.Title == title select pr).FirstOrDefault();
                 if (pressRls != null)
                 {
                     return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = pressRls };

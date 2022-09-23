@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RensourceDomain.Configurations;
+using RensourceDomain.Helpers.Enums;
 using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Request;
 using RensourceDomain.Models.Response;
@@ -98,11 +99,56 @@ namespace RensourceDomain.Interfaces.Repos
             }
         }
 
+        public async Task<PaginationResponse> GetAllBlogsByOrderingAsync(int pageNumber, int pageSize, OrderFilter order)
+        {
+            try
+            {
+                var allBlogs = from pr in _context.Blog select pr;
+                if (order == OrderFilter.Ascending)
+                    allBlogs = (from pr in allBlogs orderby pr.DateCreated ascending select pr)
+                        .Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                if (order == OrderFilter.Descending)
+                    allBlogs = (from pr in allBlogs orderby pr.DateCreated descending select pr)
+                        .Skip((pageNumber - 1) * pageSize).Take(pageSize);
+                var blogsCount = (from pr in _context.Blog select pr).Count();
+                if (allBlogs.Count() > 0)
+                {
+                    return new PaginationResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = allBlogs, TotalData = blogsCount };
+                }
+
+                return new PaginationResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Mesage: {ex.Message}; StackTrace: {ex.StackTrace}; DateTime: {DateTime.Now}");
+                return new PaginationResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
+            }
+        }
+
         public async Task<GenericResponse> GetBlogAsync(Guid Id)
         {
             try
             {
                 var blog = (from pr in _context.Blog where pr.Id == Id select pr).FirstOrDefault();
+                if (blog != null)
+                {
+                    return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = blog };
+                }
+
+                return new GenericResponse { StatusCode = HttpStatusCode.NoContent, StatusMessage = "No Data Found" };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Mesage: {ex.Message}; StackTrace: {ex.StackTrace}; DateTime: {DateTime.Now}");
+                return new GenericResponse { StatusCode = HttpStatusCode.InternalServerError, StatusMessage = $"An Error Occurred! {ex.Message}" };
+            }
+        }
+
+        public async Task<GenericResponse> GetBlogByTitleAsync(string? title)
+        {
+            try
+            {
+                var blog = (from pr in _context.Blog where pr.Title == title select pr).FirstOrDefault();
                 if (blog != null)
                 {
                     return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Successful", Data = blog };

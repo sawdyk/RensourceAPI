@@ -1,5 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using RensourceDomain.Configurations;
+using RensourceDomain.Helpers.EmailClient;
+using RensourceDomain.Interfaces.Helpers;
 using RensourceDomain.Models.Request;
 using RensourceDomain.Models.Response;
 using RensourcePersistence.AppDBContext;
@@ -17,10 +21,15 @@ namespace RensourceDomain.Interfaces.Repos
     {
         private readonly ILogger<ContactUsRepo> _logger;
         private readonly ApplicationDBContext _context;
-        public ContactUsRepo(ILogger<ContactUsRepo> logger, ApplicationDBContext context)
+
+        private readonly EmailConfig _emailConfig;
+        private readonly IEmailClientRepo _emailClientRepo;
+        public ContactUsRepo(ILogger<ContactUsRepo> logger, ApplicationDBContext context, IOptions<EmailConfig> emailConfig, IEmailClientRepo emailClientRepo)
         {
             _logger = logger;
             _context = context;
+            _emailConfig = emailConfig.Value;
+            _emailClientRepo = emailClientRepo;
         }
         public async Task<GenericResponse> CreateMessageAsync(ContactUsRequest contReq)
         {
@@ -39,8 +48,23 @@ namespace RensourceDomain.Interfaces.Repos
                 await _context.ContactUs.AddAsync(newMsg);
                 await _context.SaveChangesAsync();
 
-                _logger.LogInformation($"Message Created Successfully");
-                return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Message Created Successfully", Data = newMsg };
+                //send Mail to user 
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/EmailTemplates");
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                var filePath = path + "/ContactUs.html";
+
+                string MailContent = File.ReadAllText(filePath);
+                MailContent = MailContent.Replace("{SendersName}", contReq.SendersName);
+                MailContent = MailContent.Replace("{Message}", contReq.Message);
+                MailContent = MailContent.Replace("{Date}", DateTime.Now.ToString("yyyy"));
+
+                _emailClientRepo.SendContactUsEmailAsync(contReq, MailContent);
+
+                _logger.LogInformation($"Message Created and sent Successfully");
+                return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Message Created and sent Successfully", Data = newMsg };
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RensourceDomain.Helpers.Enums;
 using RensourceDomain.Interfaces;
 using RensourceDomain.Models.Request;
 using Swashbuckle.AspNetCore.Annotations;
@@ -49,6 +50,21 @@ namespace RensourceAPI.Controllers
         }
 
         [HttpGet]
+        [Route("AllPressReleaseByOrdering")]
+        [SwaggerOperation(Summary = "All Press Release by ordering", Description = "This Endpoint Returns a list of all Press Release Created, specifying the number of Press Release to be returned")]
+        public async Task<IActionResult> GetAllPressReleaseByOrderingAsync(int pageNumber, int pageSize, OrderFilter orderFilter)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _pressReleaseRepo.GetAllPressReleaseByOrderingAsync(pageNumber, pageSize, orderFilter);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
         [Route("PressRelease")]
         [SwaggerOperation(Summary = "Get a specific Press Release", Description = "This Endpoint Returns a specific Press Release")]
         public async Task<IActionResult> GetPressReleaseAsync(Guid Id)
@@ -59,6 +75,21 @@ namespace RensourceAPI.Controllers
             }
 
             var result = await _pressReleaseRepo.GetPressReleaseAsync(Id);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("PressReleaseByTitle")]
+        [SwaggerOperation(Summary = "Get a specific Press Release by title", Description = "This Endpoint Returns a specific Press Release by title")]
+        public async Task<IActionResult> GetPressReleaseByTitleAsync(string title)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _pressReleaseRepo.GetPressReleaseByTitleAsync(title);
 
             return Ok(result);
         }

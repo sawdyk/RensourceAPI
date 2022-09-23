@@ -134,7 +134,7 @@ namespace RensourceDomain.Interfaces.Repos
                     EmailMessage message = new EmailMessage(user.EmailAddress, MailContent);
                     _emailClientRepo.SendEmailAsync(message);
                    
-                    _logger.LogError($"Mail successfully sent to user for Password reset; DateTime: {DateTime.Now}");
+                    _logger.LogInformation($"Mail successfully sent to user for Password reset; DateTime: {DateTime.Now}");
                     return new GenericResponse { StatusCode = HttpStatusCode.OK, StatusMessage = "Check your Email for Password Reset Instructions!" };
                 }
                 else

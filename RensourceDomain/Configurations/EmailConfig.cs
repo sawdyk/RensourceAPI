@@ -15,6 +15,7 @@ namespace RensourceDomain.Configurations
         public string? Password { get; set; }
         public string? Subject { get; set; }
         public string? DisplayName { get; set; }
+        public string? RensourceEmailAddress { get; set; }
 
     }
 }

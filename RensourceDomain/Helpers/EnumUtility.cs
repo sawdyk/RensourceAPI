@@ -13,6 +13,5 @@ namespace RensourceDomain.Helpers
             SuperAdmin = 1,
             Admin = 2,
         }
-
     }
 }

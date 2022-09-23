@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RensourceDomain.Helpers.Enums;
 using RensourceDomain.Interfaces;
 using RensourceDomain.Models.Request;
 using Swashbuckle.AspNetCore.Annotations;
@@ -48,6 +49,21 @@ namespace RensourceAPI.Controllers
         }
 
         [HttpGet]
+        [Route("AllBlogsByOrdering")]
+        [SwaggerOperation(Summary = "All Blogs by ordering filter", Description = "This Endpoint Returns a list of all Blogs Created, specifying the number of Blogs to be returned")]
+        public async Task<IActionResult> GetAllBlogsByOrderingAsync(int pageNumber, int pageSize, OrderFilter orderFilter)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _blogRepo.GetAllBlogsByOrderingAsync(pageNumber, pageSize, orderFilter);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
         [Route("Blog")]
         [SwaggerOperation(Summary = "Get a specific Blog", Description = "This Endpoint Returns a specific Blog")]
         public async Task<IActionResult> GetBlogAsync(Guid Id)
@@ -58,6 +74,21 @@ namespace RensourceAPI.Controllers
             }
 
             var result = await _blogRepo.GetBlogAsync(Id);
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("BlogByTitle")]
+        [SwaggerOperation(Summary = "Get a specific Blog By Title", Description = "This Endpoint Returns a specific Blog by title")]
+        public async Task<IActionResult> GetBlogByTitleAsync(string title)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var result = await _blogRepo.GetBlogByTitleAsync(title);
 
             return Ok(result);
         }
