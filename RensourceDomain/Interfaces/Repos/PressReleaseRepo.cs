@@ -52,6 +52,7 @@ namespace RensourceDomain.Interfaces.Repos
                     var newpressRls = new PressRelease
                     {
                         Title = pressReq.Title,
+                        Description = pressReq.Description,
                         Image = response.Data.ToString(),
                         VideoLink = pressReq.VideoLink,
                         Tags = tagList,
@@ -181,6 +182,7 @@ namespace RensourceDomain.Interfaces.Repos
                     string tagList = string.Join(",", tags);
 
                     pres.Title = pressReq.Title;
+                    pres.Description = pressReq.Description;
                     pres.Image = response.Data.ToString();
                     pres.Content = pressReq.Content;
                     pres.Tags = tagList;

@@ -16,6 +16,8 @@ namespace RensourcePersistence.Entities
         public string? Title { get; set; }
         [Column(TypeName = "text")]
         public string? Content { get; set; }
+        [Column(TypeName = "text")]
+        public string? Description { get; set; }
         public string? Image { get; set; }
         public string? VideoLink { get; set; }
         public string? Tags { get; set; }

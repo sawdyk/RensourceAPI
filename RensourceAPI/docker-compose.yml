@@ -6,15 +6,21 @@ services:
       context: .
       dockerfile: Dockerfile 
     ports:
-      - '8080:80'
+      - '8080:8080'
+      - '4431:4431'
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:4431;http://+:8080
+      - ASPNETCORE_HTTPS_PORT=4431
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Password123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/rencertificate.pfx
     volumes:
-      - '/home/ubuntu/RensourceUploads/Blog:/app/wwwroot/Blog'
-      - '/home/ubuntu/RensourceUploads/Executives:/app/wwwroot/Executives'
-      - '/home/ubuntu/RensourceUploads/Partners:/app/wwwroot/Partners'
-      - '/home/ubuntu/RensourceUploads/PressRelease:/app/wwwroot/PressRelease'
-      - '/home/ubuntu/RensourceUploads/Projects:/app/wwwroot/Projects'
+      - ./https/rencertificate.pfx:/https/rencertificate.pfx:ro
+      - '/home/ubuntu/RensourceImages/RensourceUploads/Blog:/app/wwwroot/Blog'
+      - '/home/ubuntu/RensourceImages/RensourceUploads/Executives:/app/wwwroot/Executives'
+      - '/home/ubuntu/RensourceImages/RensourceUploads/Partners:/app/wwwroot/Partners'
+      - '/home/ubuntu/RensourceImages/RensourceUploads/PressRelease:/app/wwwroot/PressRelease'
+      - '/home/ubuntu/RensourceImages/RensourceUploads/Projects:/app/wwwroot/Projects'
       - '/home/ubuntu/RensourceAPILogs:/app/Logs'
      
 

@@ -12,6 +12,7 @@ namespace RensourceDomain.Models.Request
     {
         [Required(ErrorMessage = "Title is Required")]
         public string? Title { get; set; }
+        public string? SinglePageTitle { get; set; }
         public string? Description { get; set; }
         [Required(ErrorMessage = "Image is Required")]
         public IFormFile? Image { get; set; }

@@ -48,6 +48,7 @@ namespace RensourceDomain.Interfaces.Repos
                     var newProj = new Projects
                     {
                         Title = projReq.Title,
+                        SinglePageTitle = projReq.SinglePageTitle,
                         Description = projReq.Description,
                         Image = response.Data.ToString(),
                         VideoLink = projReq.VideoLink,
@@ -131,6 +132,7 @@ namespace RensourceDomain.Interfaces.Repos
                     }
 
                     proj.Title = projReq.Title;
+                    proj.SinglePageTitle = projReq.SinglePageTitle;
                     proj.Description = projReq.Description;
                     proj.Image = response.Data.ToString();
                     proj.ProjectOverview = projReq.ProjectOverview;
